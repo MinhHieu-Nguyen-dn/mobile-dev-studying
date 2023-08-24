@@ -1,52 +1,56 @@
 package com.example.contactapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 
 import com.example.contactapp.databinding.ActivityMainBinding;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactListener {
 
-    private ActivityMainBinding binding;
+    ActivityMainBinding binding;
 
-    private ArrayList<Contact> contactList;
-    private ContactsAdapter contactAdapter;
-
-    private AppDatabase appDatabase;
-    private ContactDao contactDao;
+    ContactDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View viewRoot = binding.getRoot();
-        setContentView(viewRoot);
+        setContentView(binding.getRoot());
 
-        binding.rvContacts.setLayoutManager(new LinearLayoutManager(this));
-        contactList = new ArrayList<Contact>();
-        contactAdapter = new ContactsAdapter(contactList);
-        binding.rvContacts.setAdapter(contactAdapter);
+        database = ContactDatabase.getDatabase(getApplicationContext());
 
-        contactList.add(new Contact("Nguyen Van A", "0987654321", "a@gmail.com"));
-        contactList.add(new Contact("Nguyen Van B", "0924323427", "b@gmail.com"));
-        contactList.add(new Contact("Nguyen Van C", "0934876423", "c@gmail.com"));
-        contactAdapter.notifyDataSetChanged();
+        getSupportActionBar().hide();
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                appDatabase = AppDatabase.getInstance(getApplicationContext());
-                contactDao = appDatabase.contactDao();
-
-                contactDao.insert(new Contact("Nguyen Van A", "0987654321", "a@gmail.com"));
-            }
+        binding.addNewContactBtn.setOnClickListener(v ->{
+            startActivity(new Intent(MainActivity.this,AddContactActivity.class));
         });
 
+        setDataToRecycleList();
+    }
+
+    private void setDataToRecycleList() {
+        List<Contact> contactList = database.getDao().getAllUser();
+
+        ContactAllAdapter adapter = new ContactAllAdapter(MainActivity.this, contactList,this);
+        binding.contactListRV.setAdapter(adapter);
+    }
+
+    @Override
+    public void viewUser(Contact contact) {
+        Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+        intent.putExtra("contact", contact);
+        startActivity(intent);
+
+    }
+
+    @Override
+    protected void onResume() {
+        setDataToRecycleList();
+        super.onResume();
     }
 }
