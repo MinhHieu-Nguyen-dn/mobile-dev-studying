@@ -16,8 +16,6 @@ public class NoteDetailsActivity extends AppCompatActivity {
 
     EditText titleEditText,contentEditText;
     ImageButton saveNoteBtn;
-    String title,content,docId;
-    boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +61,5 @@ public class NoteDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 }
