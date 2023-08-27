@@ -80,7 +80,6 @@ public class NoteDetailsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    //note is added
                     Utility.showToast(NoteDetailsActivity.this,"Note added successfully");
                     finish();
                 }else{
@@ -97,7 +96,6 @@ public class NoteDetailsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    //note is deleted
                     Utility.showToast(NoteDetailsActivity.this,"Note deleted successfully");
                     finish();
                 }else{

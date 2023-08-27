@@ -18,7 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
-
     EditText emailEditText,passwordEditText;
     Button loginBtn;
     ProgressBar progressBar;
@@ -37,13 +36,11 @@ public class LoginActivity extends AppCompatActivity {
 
         loginBtn.setOnClickListener((v)-> loginUser() );
         createAccountBtnTextView.setOnClickListener((v)->startActivity(new Intent(LoginActivity.this,CreateAccountActivity.class)) );
-
     }
 
     void loginUser(){
         String email  = emailEditText.getText().toString();
         String password  = passwordEditText.getText().toString();
-
 
         boolean isValidated = validateData(email,password);
         if(!isValidated){
@@ -51,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         loginAccountInFirebase(email,password);
-
     }
 
     void loginAccountInFirebase(String email,String password){
@@ -62,17 +58,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 changeInProgress(false);
                 if(task.isSuccessful()){
-                    //login is success
                     if(firebaseAuth.getCurrentUser().isEmailVerified()){
-                        //go to mainactivity
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         finish();
                     }else{
                         Utility.showToast(LoginActivity.this,"Email not verified, Please verify your email.");
                     }
-
                 }else{
-                    //login failed
                     Utility.showToast(LoginActivity.this,task.getException().getLocalizedMessage());
                 }
             }
@@ -90,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     boolean validateData(String email,String password){
-        //validate the data that are input by user.
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             emailEditText.setError("Email is invalid");
